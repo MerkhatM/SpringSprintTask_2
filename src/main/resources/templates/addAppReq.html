@@ -10,7 +10,12 @@
         </div>
         <div class="mb-3">
             <label>Курс:</label>
-            <input name="courseName" type="text" class="form-control" placeholder="Курс">
+            <select name="course.id" class="form-select">
+                <option th:each="course:${courses}"
+                        th:text="${course.getName()} + ' - ' + ${course.getPrice()} + ' KZT'"
+                        th:value="${course.getId()}">
+                </option>
+            </select>
         </div>
         <div class="mb-3 ">
             <label>Телефон:</label>

@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <h1 class="card-title pricing-card-title" th:text="${'Курс: ' + ar.courseName}"></h1>
+                <h1 class="card-title pricing-card-title" th:text="${'Курс: ' + ar.course.getName()}"></h1>
                 <ul class="list-unstyled mt-3 mb-4">
                     <li th:text="${ar.commentary}"></li>
                     <li th:text="${'Тел: ' + ar.phone}"></li>

@@ -26,11 +26,15 @@ public class ApplicationRequestService {
         applicationRequestRepos.save(applicationRequest);
     }
 
+    public void updateAppReq(ApplicationRequest updatedapplicationRequest) {
+        applicationRequestRepos.save(updatedapplicationRequest);
+    }
+
     public void deleteAppReqById(Long id) {
         applicationRequestRepos.deleteById(id);
     }
 
-    public void editAppReqById(Long id) {
+    public void setHandledAppReqById(Long id) {
         ApplicationRequest applicationRequest = applicationRequestRepos.findById(id).orElse(null);
         applicationRequest.setHandled(true);
         applicationRequestRepos.save(applicationRequest);
@@ -49,4 +53,5 @@ public class ApplicationRequestService {
                 filter(applicationRequest -> !applicationRequest.isHandled())
                 .toList();
     }
+
 }

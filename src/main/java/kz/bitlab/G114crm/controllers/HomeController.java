@@ -2,6 +2,7 @@ package kz.bitlab.G114crm.controllers;
 
 import kz.bitlab.G114crm.models.ApplicationRequest;
 import kz.bitlab.G114crm.services.ApplicationRequestService;
+import kz.bitlab.G114crm.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,8 @@ public class HomeController {
 
     @Autowired
     private ApplicationRequestService applicationRequestService;
+    @Autowired
+    private CourseService courseService;
 
     @GetMapping("/")
     public String homePage(Model model) {
@@ -24,6 +27,7 @@ public class HomeController {
     @GetMapping("details/{id}")
     public String detailsPage(@PathVariable Long id, Model model) {
         model.addAttribute("appReq", applicationRequestService.getAppReqById(id));
+        model.addAttribute("courses",courseService.getAllCourse());
         return "details";
     }
 
@@ -40,7 +44,8 @@ public class HomeController {
     }
 
     @GetMapping("/addAppReq")
-    public String addPage() {
+    public String addPage(Model model) {
+        model.addAttribute("courses",courseService.getAllCourse());
         return "addAppReq";
     }
 
@@ -56,11 +61,16 @@ public class HomeController {
         return "redirect:/";
     }
 
-    @PostMapping("/editAppReq/{id}")
-    public String editAppReq(@PathVariable Long id) {
-        applicationRequestService.editAppReqById(id);
+    @PostMapping("/setHandledAppReq/{id}")
+    public String setHandledAppReq(@PathVariable Long id) {
+        applicationRequestService.setHandledAppReqById(id);
         return "redirect:/details/" + id;
     }
 
+    @PostMapping("/editAppReq")
+    public String editAppReq(ApplicationRequest updatedapplicationRequest) {
+        applicationRequestService.updateAppReq(updatedapplicationRequest);
+        return "redirect:/details/" + updatedapplicationRequest.getId();
+    }
 
 }
