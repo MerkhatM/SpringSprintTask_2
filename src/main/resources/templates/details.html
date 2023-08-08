@@ -10,7 +10,7 @@
         <input type="hidden" name="id" th:value="${appReq.id}">
         <input type="hidden" name="handled" th:value="${appReq.handled}">
         <label>USER NAME</label>
-        <input  th:value="${appReq.userName}" type="text" class="form-control" name="userName"><br>
+        <input th:value="${appReq.userName}" type="text" class="form-control" name="userName"><br>
         <label>COURSE NAME</label>
         <select class="form-select" name="course.id">
             <option th:each="course:${courses}"
@@ -20,14 +20,57 @@
             </option>
         </select><br>
         <label>COMMENTARY:</label>
-        <input  th:value="${appReq.commentary}" type="text" class="form-control"
+        <input th:value="${appReq.commentary}" type="text" class="form-control"
                name="commentary"><br>
         <label>PHONE:</label>
-        <input  th:value="${appReq.phone}" type="text" class="form-control" name="phone"><br>
-
+        <input th:value="${appReq.phone}" type="text" class="form-control" name="phone"><br>
         <div class="d-flex ">
             <form th:if="${!appReq.handled}" th:action="${'/setHandledAppReq/'+appReq.id}" method="post">
-                <button th:formaction="${'/setHandledAppReq/'+appReq.id}" class="btn btn-success me-2">Обработать заявку</button>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-success me-2" data-bs-toggle="modal"
+                        data-bs-target="#HandleAppModal">
+                    Обработать заявку
+                </button>
+
+                <!-- Modal for operator selection -->
+
+                <div class="modal fade" id="HandleAppModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5">Выберите оператора</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table">
+                                    <thead>
+                                    <th>Выбрать</th>
+                                    <th>Имя</th>
+                                    <th>Фамилия</th>
+                                    <th>Департамент</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="operator:${operators}">
+                                        <td><input type="checkbox" name="operators_id" th:value="${operator.getId()}">
+                                        </td>
+                                        <td th:text="${operator.getName()}"></td>
+                                        <td th:text="${operator.getSurname()}"></td>
+                                        <td th:text="${operator.getDepartment()}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                <button type="submit" th:formaction="${'/setHandledAppReq/'+appReq.id}"
+                                        class="btn btn-primary">Назначить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
             <form th:action="${'/deleteAppReq/'+appReq.id}" method="post">
                 <!-- Button trigger modal -->
@@ -35,7 +78,7 @@
                     Удалить заявку
                 </button>
 
-                <!-- Modal -->
+                <!-- Modal FOR DELETING APPREQ-->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                      aria-hidden="true">
                     <div class="modal-dialog">
@@ -50,7 +93,9 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">НЕТ</button>
-                                <button type="submit" th:formaction="${'/deleteAppReq/'+appReq.id}" class="btn btn-success">ДА</button>
+                                <button type="submit" th:formaction="${'/deleteAppReq/'+appReq.id}"
+                                        class="btn btn-success">ДА
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -58,10 +103,34 @@
 
             </form>
 
-            <button  class="btn btn-primary me-2">Изменить заявку</button>
+            <button class="btn btn-primary me-2">Изменить заявку</button>
 
         </div>
     </form>
+    <table class="table mt-4" th:if="${!appReq.getOperators().isEmpty()}">
+        <thead>
+        <tr>
+            <th>Удалить</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Департамент</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="operatorOfAppReq:${appReq.getOperators()}">
+            <form action="/deleteOperatorFromAppReq" method="post">
+                <input type="hidden" name="operatorIdOfAppReq" th:value="${operatorOfAppReq.getId()}">
+                <input type="hidden" name="idOfAppreq" th:value="${appReq.id}">
+                <td>
+                    <button class="btn btn-danger btn-sm">X</button>
+                </td>
+                <td th:text="${operatorOfAppReq.getName()}"></td>
+                <td th:text="${operatorOfAppReq.getSurname()}"></td>
+                <td th:text="${operatorOfAppReq.getDepartment()}"></td>
+            </form>
+        </tr>
 
+        </tbody>
+    </table>
 </div>
 </html>
